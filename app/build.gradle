@@ -1,0 +1,61 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    defaultConfig {
+        applicationId "com.example.pablo.popularmovie1"
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        debug{
+            buildConfigField("String", "MOVIEDBIMAGE_ENDPOINT", "\"https://image.tmdb.org/t/p/w500/\"")
+            buildConfigField("String", "MOVIEDBAPI_ENDPOINT", "\"https://api.themoviedb.org/3/movie/\"")
+            buildConfigField("String", "THEMOVIEDB_API", "\"${System.getenv("THEMOVIEDB_API")}\"")
+        }
+        release {
+            buildConfigField("String", "MOVIEDBIMAGE_ENDPOINT", "\"https://image.tmdb.org/t/p/w500/\"")
+            buildConfigField("String", "MOVIEDBAPI_ENDPOINT", "\"https://api.themoviedb.org/3/movie/\"")
+            buildConfigField("String", "THEMOVIEDB_API", "\"${System.getenv("THEMOVIEDB_API")}\"")
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation group : 'com.android.support', name: 'appcompat-v7', version: supportLibrary
+    implementation group: 'com.android.support', name: 'design', version: supportLibrary
+    implementation "com.android.support:recyclerview-v7:${supportLibrary}"
+    implementation "com.android.support:palette-v7:${supportLibrary}"
+
+    implementation group: 'com.android.support.constraint', name: 'constraint-layout', version: constraintLayout
+
+    implementation group: 'io.reactivex.rxjava2', name: 'rxjava', version: rxJava
+    implementation group: 'io.reactivex.rxjava2', name: 'rxandroid', version: rxAndroid
+
+    implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: retrofit2
+    implementation group: 'com.squareup.retrofit2', name: 'adapter-rxjava2', version: retrofit2
+    implementation group: 'com.squareup.retrofit2', name: 'converter-jackson', version: retrofit2
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jackson
+
+    implementation group : 'com.jakewharton', name: 'butterknife', version: butterknife
+    annotationProcessor group: 'com.jakewharton', name: 'butterknife-compiler', version: butterknife
+
+    implementation "com.squareup.picasso:picasso:${picasso}"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+}
