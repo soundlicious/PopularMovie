@@ -9,6 +9,7 @@ import com.example.pablo.popularmovie1.bases.IMVPView;
 
 public interface MainMVPPresenter<E extends IMVPView> extends IMVPPresenter<E>{
 
+    void fetchMovieList(int which);
     void fetchPopularMovie();
     void fetchTopRatedMovie();
     void reset();

@@ -1,5 +1,8 @@
 package com.example.pablo.popularmovie1.data.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -20,7 +23,7 @@ import java.util.List;
         "total_results",
         "total_pages"
 })
-public class Page {
+public class Page implements Parcelable {
 
     @JsonProperty("page")
     private Integer page;
@@ -71,4 +74,39 @@ public class Page {
         this.totalPages = totalPages;
     }
 
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.page);
+        dest.writeTypedList(this.results);
+        dest.writeValue(this.totalMovieDetails);
+        dest.writeValue(this.totalPages);
+    }
+
+    public Page() {
+    }
+
+    private Page(Parcel in) {
+        this.page = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.results = in.createTypedArrayList(MovieDetail.CREATOR);
+        this.totalMovieDetails = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.totalPages = (Integer) in.readValue(Integer.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Page> CREATOR = new Parcelable.Creator<Page>() {
+        @Override
+        public Page createFromParcel(Parcel source) {
+            return new Page(source);
+        }
+
+        @Override
+        public Page[] newArray(int size) {
+            return new Page[size];
+        }
+    };
 }

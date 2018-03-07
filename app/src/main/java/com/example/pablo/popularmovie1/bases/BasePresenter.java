@@ -2,8 +2,6 @@ package com.example.pablo.popularmovie1.bases;
 
 import com.example.pablo.popularmovie1.data.DataManager;
 
-import java.lang.ref.WeakReference;
-
 /**
  * Created by pablo on 02/03/2018.
  */
@@ -12,7 +10,7 @@ public class BasePresenter<E extends IMVPView> implements IMVPPresenter<E> {
 
     private E mMvpView;
 
-    public E getMvpView() {
+    protected E getMvpView() {
         return mMvpView;
     }
 
@@ -36,7 +34,7 @@ public class BasePresenter<E extends IMVPView> implements IMVPPresenter<E> {
             throw new MvpViewNotAttachedException();
     }
 
-    public DataManager getDataManager(){
+    protected DataManager getDataManager(){
         return DataManager.getInstance();
     }
 

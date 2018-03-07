@@ -3,4 +3,11 @@
     <string name="default_error_message">An error happened</string>
     <string name="default_movie_poster_description">Movie Poster</string>
     <string name="movie_title">Movie title</string>
+    <string name="filter_movie_list">Filter Movie List</string>
+    <string name="select_categorie">Sort by :</string>
+    <string name="dialog_categorie_positive">done</string>
+    <string-array name="categorie_movie_filter">
+        <item>Popular</item>
+        <item>Top Rated</item>
+    </string-array>
 </resources>

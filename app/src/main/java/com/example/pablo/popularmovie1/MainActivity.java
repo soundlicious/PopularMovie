@@ -7,11 +7,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,10 +23,9 @@ import android.widget.TextView;
 
 import com.example.pablo.popularmovie1.bases.BaseActivity;
 import com.example.pablo.popularmovie1.data.models.MovieDetail;
-import com.example.pablo.popularmovie1.utilities.MainMVPView;
 import com.squareup.picasso.Picasso;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -30,49 +33,102 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements MainMVPView {
 
+    private static final String MOVIE_LIST = "movieList";
+    private static final String CATEGORIE = "categorie";
+    private static final String MAX_PAGE = "maxPage";
+    private static final String CURRENT_PAGE = "currentPage";
+
     @BindView(R.id.movie_grid)
     protected RecyclerView movieGrid;
 
-    private MainPresenter<MainMVPView> presenter = new MainPresenter<>(BuildConfig.THEMOVIEDB_API, Locale.getDefault().toString().replace("_","-"));
+    private MainPresenter presenter;
     private MovieGridAdapter adapter;
-    int pastVisiblesItems, visibleItemCount, totalItemCount;
+
+    private int tempCat;
+    private String[] categories;
+
+    private int visibleItemCount;
+    private int totalItemCount;
+    private int pastVisiblesItems;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ArrayList<MovieDetail> movieList = null;
+        String apiKey = BuildConfig.THEMOVIEDB_API;
+        String language = Locale.getDefault().toString().replace("_", "-");
+        categories = getResources().getStringArray(R.array.categorie_movie_filter);
+
         setContentView(R.layout.activity_main);
-        setUnBinder(ButterKnife.bind(this));
-        presenter.onAttach(this);
 
-        showLoading();
-        GridLayoutManager layoutManager = new GridLayoutManager(this, calculateNoOfColumns(this));
-        movieGrid.addOnScrollListener(new RecyclerView.OnScrollListener()
-        {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy)
-            {
-                if(dy > 0) //check for scroll down
-                {
-                    visibleItemCount = layoutManager.getChildCount();
-                    totalItemCount = layoutManager.getItemCount();
-                    pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+        try {
+            MainPresenter.Builder builder = new MainPresenter.Builder()
+                    .setApiKey(apiKey)
+                    .setLanguage(language);
 
-                    if (!presenter.isLoading())
+            if (savedInstanceState != null) {
+                builder = builder.setCategorie(savedInstanceState.getInt(CATEGORIE))
+                        .setCurrentPage(savedInstanceState.getInt(CURRENT_PAGE))
+                        .setLoading(false)
+                        .setMaxPage(savedInstanceState.getInt(MAX_PAGE));
+                movieList = savedInstanceState.getParcelableArrayList(MOVIE_LIST);
+            }
+
+            presenter = builder.build();
+            setUnBinder(ButterKnife.bind(this));
+            presenter.onAttach(this); //REMARK How to check that call?
+
+            GridLayoutManager layoutManager = new GridLayoutManager(this, calculateNoOfColumns(this));
+            movieGrid.setLayoutManager(layoutManager);
+            movieGrid.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                /** https://stackoverflow.com/a/26561717 **/
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    if (dy > 0) //check for scroll down
                     {
-                        if ( (visibleItemCount + pastVisiblesItems) >= totalItemCount)
-                        {
-                            presenter.fetchPopularMovie();
+                        visibleItemCount = layoutManager.getChildCount();
+                        totalItemCount = layoutManager.getItemCount();
+                        pastVisiblesItems = layoutManager.findFirstVisibleItemPosition();
+
+                        if (!presenter.isLoading() && (visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                                System.out.println("will fetch movie list");
+                                presenter.fetchMovieList(presenter.getCategorie());
                         }
                     }
                 }
+
+            });
+            adapter = new
+
+                    MovieGridAdapter(this);
+            movieGrid.setAdapter(adapter);
+
+
+            setTitle(categories[presenter.getCategorie()]);
+
+            if (movieList != null)
+
+            {
+                populateList(movieList);
+            } else
+
+            {
+                showLoading();
+                presenter.fetchMovieList(-1);
             }
-        });
-        movieGrid.setLayoutManager(layoutManager);
-        adapter = new MovieGridAdapter(this);
-        movieGrid.setAdapter(adapter);
-        presenter.fetchPopularMovie();
+        } catch (NullAPIException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     @Override
@@ -82,26 +138,66 @@ public class MainActivity extends BaseActivity implements MainMVPView {
     }
 
     @Override
-    public void populateList(List<MovieDetail> movieDetails) {
+    public void populateList(ArrayList<MovieDetail> movieDetails) {
         adapter.populateList(movieDetails);
         adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void flushList() {
+        adapter.resetList();
     }
 
     /**
      * https://stackoverflow.com/a/44764780
      */
+
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         int scalingFactor = 200;
         int columnCount = (int) (dpWidth / scalingFactor);
-        return (columnCount>=2?columnCount:2);
+        return (columnCount >= 2 ? columnCount : 2);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.MovieFilter:
+                final AlertDialog.Builder build = new AlertDialog.Builder(this);
+                build.setTitle(getResources().getString(R.string.select_categorie));
+                build.setCancelable(true);
+                build.setSingleChoiceItems(categories, presenter.getCategorie(), (dialog, which) -> tempCat = which);
+                build.setPositiveButton(getResources().getString(R.string.dialog_categorie_positive), (dialog, which) -> {
+                    if (tempCat != presenter.getCategorie()) {
+                        presenter.fetchMovieList(tempCat);
+                        setTitle(categories[tempCat]);
+                    }
+                });
+                build.show();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        if (adapter != null) {
+            outState.putParcelableArrayList(MOVIE_LIST, adapter.getList());
+            outState.putInt(CATEGORIE, presenter.getCategorie());
+            outState.putInt(MAX_PAGE, presenter.getMaxPage());
+            outState.putInt(CURRENT_PAGE, presenter.getCurrentPage());
+        }
+        super.onSaveInstanceState(outState);
     }
 }
 
 class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder> {
     private Context mContext;
-    private List<MovieDetail> movieList;
+    private ArrayList<MovieDetail> movieList;
 
     MovieGridAdapter(Context c) {
         mContext = c;
@@ -109,13 +205,13 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.movie_grid_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.bind(movieList.get(position));
     }
 
@@ -125,14 +221,23 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
 
     @Override
     public int getItemCount() {
-        return (movieList != null)? movieList.size():0;
+        return (movieList != null) ? movieList.size() : 0;
     }
 
-    void populateList(List<MovieDetail> movieDetails) {
+    void populateList(ArrayList<MovieDetail> movieDetails) {
         if (movieList != null)
             movieList.addAll(movieDetails);
         else
             movieList = movieDetails;
+    }
+
+    void resetList() {
+        movieList = new ArrayList<>();
+        notifyDataSetChanged();
+    }
+
+    ArrayList<MovieDetail> getList() {
+        return movieList;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -188,7 +293,7 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
             ButterKnife.bind(this, itemView);
         }
 
-        void bind(MovieDetail movie){
+        void bind(MovieDetail movie) {
             title.setText(movie.getTitle());
             Picasso.with(mContext)
                     .load(BuildConfig.MOVIEDBIMAGE_ENDPOINT + movie.getPosterPath())
@@ -196,8 +301,7 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
                     .placeholder(R.drawable.ic_launcher_background)
                     .resize(200, 300)
                     .into(target);
-            }
-
+        }
 
 
         @Override
