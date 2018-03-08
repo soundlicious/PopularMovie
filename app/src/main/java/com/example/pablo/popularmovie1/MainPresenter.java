@@ -86,7 +86,7 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
     }
 
 
-    boolean isLoading() {
+    public boolean isLoading() {
         return isLoading;
     }
 
@@ -110,15 +110,15 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
         }
     }
 
-    int getCategorie() {
+    public int getCategorie() {
         return categorie;
     }
 
-    int getMaxPage() {
+    public int getMaxPage() {
         return maxPage;
     }
 
-    int getCurrentPage() {
+    public int getCurrentPage() {
         return currentPage;
     }
 
@@ -171,15 +171,15 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
 
 class NullAPIException extends Exception {
 
-    NullAPIException() {
+    public NullAPIException() {
         super();
     }
 
-    NullAPIException(String message) {
+    public NullAPIException(String message) {
         super(message);
     }
 
-    NullAPIException(String message, Throwable cause) {
+    public NullAPIException(String message, Throwable cause) {
         super(message, cause);
     }
 }

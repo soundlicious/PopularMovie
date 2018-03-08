@@ -42,9 +42,6 @@ public final class PaletteTransformation implements Transformation {
     public static abstract class Callback
             implements com.squareup.picasso.Callback {
 
-        public Callback() {
-        }
-
         @Override
         public void onSuccess() {
             onPalette();
@@ -52,6 +49,7 @@ public final class PaletteTransformation implements Transformation {
 
         @Override
         public void onError() {
+            System.out.println("Couldn't generate palette");
         }
 
         public abstract void onPalette();

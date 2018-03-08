@@ -3,16 +3,13 @@ package com.example.pablo.popularmovie1.MovieDetail;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.support.v7.app.ActionBar;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,23 +27,23 @@ import butterknife.ButterKnife;
 public class MovieDetailActivity extends BaseActivity implements MovieDetailMVPView {
 
     @BindView(R.id.textView_original_title)
-    TextView originaltitle;
+    protected TextView originaltitle;
     @BindView(R.id.textView_title)
-    TextView title;
+    protected TextView title;
     @BindView(R.id.synopsis_extView)
-    TextView synopsis;
+    protected TextView synopsis;
     @BindView(R.id.imageView_backrgound_poster)
-    ImageView background;
+    protected ImageView background;
     @BindView(R.id.imageView_movie_preview)
-    ImageView preview;
+    protected ImageView preview;
     @BindView(R.id.cardView_movie_detail)
-    CardView cardView;
+    protected CardView cardView;
     @BindView(R.id.imageView_upNavigation)
-    ImageView upNavigation;
+    protected ImageView upNavigation;
     @BindView(R.id.textView_rating_movieDetail)
-    TextView rating;
+    protected TextView rating;
     @BindView(R.id.textView_movieDetail_releaseDate)
-    TextView release;
+    protected TextView release;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

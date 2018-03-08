@@ -2,7 +2,7 @@ package com.example.pablo.popularmovie1.utilities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo; 
+import android.net.NetworkInfo;
 
 /**
  * Created by pablo on 02/03/2018.

@@ -240,7 +240,7 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
         return (movieList != null) ? movieList.size() : 0;
     }
 
-    void populateList(ArrayList<MovieDetail> movieDetails) {
+    public void populateList(ArrayList<MovieDetail> movieDetails) {
         if (movieList != null)
             movieList.addAll(movieDetails);
         else
@@ -262,11 +262,11 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @BindView(R.id.movie_poster)
-        ImageView poster;
+        protected ImageView poster;
         @BindView(R.id.movie_title)
-        TextView title;
+        protected TextView title;
         @BindView(R.id.constraintLayout)
-        ConstraintLayout layout;
+        protected ConstraintLayout layout;
         com.squareup.picasso.Target target = new com.squareup.picasso.Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
