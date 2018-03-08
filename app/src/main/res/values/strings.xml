@@ -6,6 +6,13 @@
     <string name="filter_movie_list">Filter Movie List</string>
     <string name="select_categorie">Sort by :</string>
     <string name="dialog_categorie_positive">done</string>
+    <string name="movie_detail_original_title">(%s)</string>
+    <string name="error_loading_movie_detail">An error happened while loading movie details</string>
+    <string name="backrgound_poster">Backrgound poster</string>
+    <string name="movie_preview">movie preview</string>
+    <string name="release_date_format">release date : %s</string>
+    <string name="rating_format">%.1f</string>
+    <string name="back_button">Back Button</string>
     <string-array name="categorie_movie_filter">
         <item>Popular</item>
         <item>Top Rated</item>

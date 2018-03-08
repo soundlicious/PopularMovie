@@ -9,9 +9,10 @@ android {
         versionCode rootProject.versionCode
         versionName rootProject.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
     buildTypes {
-        debug{
+        debug {
             buildConfigField("String", "MOVIEDBIMAGE_ENDPOINT", "\"https://image.tmdb.org/t/p/w500/\"")
             buildConfigField("String", "MOVIEDBAPI_ENDPOINT", "\"https://api.themoviedb.org/3/movie/\"")
             buildConfigField("String", "THEMOVIEDB_API", "\"${System.getenv("THEMOVIEDB_API")}\"")
@@ -28,14 +29,20 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    configurations.all {
+        resolutionStrategy.force "com.android.support:cardview-v7:${rootProject.supportLibraryCard}"
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation group : 'com.android.support', name: 'appcompat-v7', version: supportLibrary
-    implementation group: 'com.android.support', name: 'design', version: supportLibrary
-    implementation "com.android.support:recyclerview-v7:${supportLibrary}"
-    implementation "com.android.support:palette-v7:${supportLibrary}"
+    implementation group: 'com.android.support', name: 'appcompat-v7', version: supportLibraryCard
+    implementation group: 'com.android.support', name: 'design', version: supportLibraryCard
+    implementation "com.android.support:recyclerview-v7:${supportLibraryCard}"
+    implementation "com.android.support:palette-v7:${supportLibraryCard}"
+    implementation "com.android.support:cardview-v7:${supportLibraryCard}"
+
 
     implementation group: 'com.android.support.constraint', name: 'constraint-layout', version: constraintLayout
 
@@ -50,12 +57,15 @@ dependencies {
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: jackson
     implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: jackson
 
-    implementation group : 'com.jakewharton', name: 'butterknife', version: butterknife
+    implementation group: 'com.jakewharton', name: 'butterknife', version: butterknife
     annotationProcessor group: 'com.jakewharton', name: 'butterknife-compiler', version: butterknife
 
     implementation "com.squareup.picasso:picasso:${picasso}"
 
+    implementation "hyogeun.github.com.colorratingbar:ColorRatingBar:${ratingBar}"
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    implementation 'com.android.support:cardview-v7:27.1.0'
 }

@@ -1,12 +1,15 @@
 package com.example.pablo.popularmovie1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.pablo.popularmovie1.MovieDetail.MovieDetailActivity;
 import com.example.pablo.popularmovie1.bases.BaseActivity;
 import com.example.pablo.popularmovie1.data.models.MovieDetail;
 import com.squareup.picasso.Picasso;
@@ -31,12 +35,13 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity implements MainMVPView {
+public class MainActivity extends BaseActivity implements MainMVPView, MainMVPNavigator, MovieGridAdapter.ListItemClickListener{
 
-    private static final String MOVIE_LIST = "movieList";
-    private static final String CATEGORIE = "categorie";
-    private static final String MAX_PAGE = "maxPage";
-    private static final String CURRENT_PAGE = "currentPage";
+    public static final String MOVIE_LIST = "movieList";
+    public static final String CATEGORIE = "categorie";
+    public static final String MAX_PAGE = "maxPage";
+    public static final String CURRENT_PAGE = "currentPage";
+    public static final String MOVIE_DETAIL = "movie_detail";
 
     @BindView(R.id.movie_grid)
     protected RecyclerView movieGrid;
@@ -60,7 +65,6 @@ public class MainActivity extends BaseActivity implements MainMVPView {
         String apiKey = BuildConfig.THEMOVIEDB_API;
         String language = Locale.getDefault().toString().replace("_", "-");
         categories = getResources().getStringArray(R.array.categorie_movie_filter);
-
         setContentView(R.layout.activity_main);
 
         try {
@@ -101,12 +105,8 @@ public class MainActivity extends BaseActivity implements MainMVPView {
                 }
 
             });
-            adapter = new
-
-                    MovieGridAdapter(this);
+            adapter = new MovieGridAdapter(this);
             movieGrid.setAdapter(adapter);
-
-
             setTitle(categories[presenter.getCategorie()]);
 
             if (movieList != null)
@@ -193,14 +193,30 @@ public class MainActivity extends BaseActivity implements MainMVPView {
         }
         super.onSaveInstanceState(outState);
     }
+
+    @Override
+    public void openMovieDetail(MovieDetail movie, ImageView view) {
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra(MOVIE_DETAIL, movie);
+        ActivityOptionsCompat options = ActivityOptionsCompat.
+                makeSceneTransitionAnimation(this, view, "poster");
+        startActivity(intent, options.toBundle());
+    }
+
+    @Override
+    public void onItemClick(MovieDetail movieDetail, ImageView view) {
+        openMovieDetail(movieDetail, view);
+    }
 }
 
 class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder> {
     private Context mContext;
     private ArrayList<MovieDetail> movieList;
+    final private ListItemClickListener OnClickListener;
 
-    MovieGridAdapter(Context c) {
-        mContext = c;
+    MovieGridAdapter(MainActivity activity) {
+        mContext = activity;
+        OnClickListener = activity;
     }
 
     @NonNull
@@ -231,13 +247,17 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
             movieList = movieDetails;
     }
 
-    void resetList() {
+    public void resetList() {
         movieList = new ArrayList<>();
         notifyDataSetChanged();
     }
 
-    ArrayList<MovieDetail> getList() {
+    public ArrayList<MovieDetail> getList() {
         return movieList;
+    }
+
+    public interface ListItemClickListener {
+        void onItemClick(MovieDetail movieDetail, ImageView view);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -291,6 +311,7 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            itemView.setOnClickListener(this);
         }
 
         void bind(MovieDetail movie) {
@@ -298,7 +319,7 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
             Picasso.with(mContext)
                     .load(BuildConfig.MOVIEDBIMAGE_ENDPOINT + movie.getPosterPath())
                     .centerCrop()
-                    .placeholder(R.drawable.ic_launcher_background)
+                    .placeholder(R.mipmap.ic_launcher_foreground)
                     .resize(200, 300)
                     .into(target);
         }
@@ -306,7 +327,8 @@ class MovieGridAdapter extends RecyclerView.Adapter<MovieGridAdapter.ViewHolder>
 
         @Override
         public void onClick(View view) {
-
+            int position = getAdapterPosition();
+            OnClickListener.onItemClick(movieList.get(position), poster);
         }
     }
 }

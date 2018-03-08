@@ -19,6 +19,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url "https://jitpack.io" }
     }
 }
 
@@ -34,13 +35,14 @@ ext {
     //endregion
 
     //region SDK && Tools
-    minSdkVersion = 15
-    targetSdkVersion = 27
-    compileSdkVersion = 27
+    minSdkVersion = 21
+    targetSdkVersion = 26
+    compileSdkVersion = 26
     //endregion
 
     //region App Dependencies
     supportLibrary = '27.1.0'
+    supportLibraryCard = '26.+'
     constraintLayout = '1.0.2'
     rxJava = '2.1.10'
     rxAndroid = '2.0.2'
@@ -48,6 +50,7 @@ ext {
     jackson = '2.9.4'
     butterknife = '8.8.1'
     picasso = '2.5.2'
+    ratingBar = '1.0.1'
     //endregion
 }
 

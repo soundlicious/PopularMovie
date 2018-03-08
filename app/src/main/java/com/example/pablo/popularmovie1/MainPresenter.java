@@ -106,6 +106,7 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
             case 1:
                 fetchTopRatedMovie();
                 break;
+            default:
         }
     }
 
@@ -122,44 +123,44 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
     }
 
     static class Builder {
-        int currentPage = 1;
-        int maxPage = 1000;
-        boolean isLoading = false;
-        String language;
-        int categorie = 0;
+        private int currentPage = 1;
+        private int maxPage = 1000;
+        private boolean isLoading = false;
+        private String language;
+        private int categorie = 0;
         private String apiKey;
 
-        MainPresenter build() throws NullAPIException {
+        public MainPresenter build() throws NullAPIException {
             return new MainPresenter(apiKey, language, currentPage, maxPage, isLoading, categorie);
         }
 
 
-        Builder setCurrentPage(int currentPage) {
+        public Builder setCurrentPage(int currentPage) {
             this.currentPage = currentPage;
             return this;
         }
 
-        Builder setMaxPage(int maxPage) {
+        public Builder setMaxPage(int maxPage) {
             this.maxPage = maxPage;
             return this;
         }
 
-        Builder setLoading(boolean loading) {
+        public Builder setLoading(boolean loading) {
             isLoading = loading;
             return this;
         }
 
-        Builder setLanguage(String language) {
+        public Builder setLanguage(String language) {
             this.language = language;
             return this;
         }
 
-        Builder setCategorie(int categorie) {
+        public Builder setCategorie(int categorie) {
             this.categorie = categorie;
             return this;
         }
 
-        Builder setApiKey(String apiKey) {
+        public Builder setApiKey(String apiKey) {
             this.apiKey = apiKey;
             return this;
         }

@@ -249,7 +249,7 @@ public class MovieDetail implements Parcelable {
         this.voteAverage = (Double) in.readValue(Double.class.getClassLoader());
     }
 
-    static final Parcelable.Creator<MovieDetail> CREATOR = new Parcelable.Creator<MovieDetail>() {
+    public static final Parcelable.Creator<MovieDetail> CREATOR = new Parcelable.Creator<MovieDetail>() {
         @Override
         public MovieDetail createFromParcel(Parcel source) {
             return new MovieDetail(source);

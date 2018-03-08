@@ -105,7 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IMVPView
         return NetworkMonitor.isNetworkConnected(getApplicationContext());
     }
 
-    public void setUnBinder(Unbinder unBinder) {
+    protected void setUnBinder(Unbinder unBinder) {
         mUnBinder = unBinder;
     }
 
