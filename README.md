@@ -2,7 +2,7 @@
 
 #### Made for Udacity Android Developer NanoDegree Program
 
-![](https://github.com/soundlicious/PopularMovie1/tree/a2500d8b1e091ae00b332ebd8984bd402335fda8/Previews/PopulaeMovie1.gif)
+![](https://github.com/soundlicious/PopularMovie1/blob/master/Previews/PopularMovie1.gif?raw=true)
 
 # Libraries
 * [rxAndroid](https://github.com/ReactiveX/RxAndroid) - Library for composing asynchronous and event-based programs by using observable sequences.
