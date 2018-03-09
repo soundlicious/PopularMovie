@@ -16,7 +16,7 @@ public class BasePresenter<E extends IMVPView> implements IMVPPresenter<E> {
 
     @Override
     public void onAttach(E mvpView) {
-        mMvpView = mvpView;
+            mMvpView = mvpView;
     }
 
     @Override

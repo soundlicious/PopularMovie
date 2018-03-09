@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.example.pablo.popularmovie1.MovieDetail.MovieDetailActivity;
 import com.example.pablo.popularmovie1.bases.BaseActivity;
+import com.example.pablo.popularmovie1.bases.IMVPView;
 import com.example.pablo.popularmovie1.data.models.MovieDetail;
 import com.squareup.picasso.Picasso;
 
@@ -82,6 +83,7 @@ public class MainActivity extends BaseActivity implements MainMVPView, MainMVPNa
 
             presenter = builder.build();
             setUnBinder(ButterKnife.bind(this));
+
             presenter.onAttach(this); //REMARK How to check that call?
 
             GridLayoutManager layoutManager = new GridLayoutManager(this, calculateNoOfColumns(this));
