@@ -10,5 +10,6 @@
 * [Retrofit2](http://square.github.io/retrofit/) - A type-safe HTTP client for Android and Java
 * [Picasso](https://square.github.io/picasso/) - A powerful image downloading and caching library for Android
 * [Jackson](https://github.com/FasterXML/jackson) - JSON parser for Java
+
 # How to add API Key
-Add your [moviedb](https://www.themoviedb.org/) API key in your with the following Key "THEMOVIEDB_API";
+Add your [moviedb](https://www.themoviedb.org/) API key in your environment with the following Key "THEMOVIEDB_API";

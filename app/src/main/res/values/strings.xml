@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PopularMovie1</string>
+    <string name="app_name" translatable="false">PopularMovie</string>
     <string name="default_error_message">An error happened</string>
     <string name="default_movie_poster_description">Movie Poster</string>
     <string name="movie_title">Movie title</string>
@@ -13,8 +13,21 @@
     <string name="release_date_format">release date : %s</string>
     <string name="rating_format">%.1f</string>
     <string name="back_button">Back Button</string>
+    <string name="title_activity_movie_detail">MovieDetail</string>
+
     <string-array name="categorie_movie_filter">
         <item>Popular</item>
         <item>Top Rated</item>
+        <item>Bookmarked</item>
     </string-array>
+    <string-array name="movie_filter_tab">
+        <item>SYNOPSIS</item>
+        <item>PREVIEWS</item>
+        <item>COMMENTS</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="previewCard_videoPreview">Video preview</string>
+    <string name="bookmark">bookmark movie</string>
 </resources>
