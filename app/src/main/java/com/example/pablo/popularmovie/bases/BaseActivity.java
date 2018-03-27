@@ -2,6 +2,7 @@ package com.example.pablo.popularmovie.bases;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -11,6 +12,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,8 +40,12 @@ public abstract class BaseActivity extends AppCompatActivity implements IMVPView
         }
         progressDialog.setContentView(R.layout.progress_dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setCancelable(false);
+        progressDialog.setCancelable(true);
         progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setOnCancelListener(dialogInterface -> {
+            if (!isNetworkOn())
+                showRefreshButton();
+        });
     }
 
     @Override

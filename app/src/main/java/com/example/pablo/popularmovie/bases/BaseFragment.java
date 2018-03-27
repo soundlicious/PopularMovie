@@ -109,6 +109,16 @@ public class BaseFragment extends android.support.v4.app.Fragment implements IMV
     }
 
     @Override
+    public void showRefreshButton() {
+
+    }
+
+    @Override
+    public void hideRefreshButton() {
+
+    }
+
+    @Override
     public void onDestroy() {
         if (unBinder != null) {
             unBinder.unbind();

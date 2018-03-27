@@ -22,7 +22,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.pablo.popularmovie.MovieDetail.MovieDetailActivity;
@@ -51,6 +53,8 @@ public class MainActivity extends BaseActivity implements MainMVPView, MainMVPNa
 
     @BindView(R.id.movie_grid)
     protected RecyclerView movieGrid;
+    @BindView(R.id.button_main_refresh)
+    protected Button refresh;
 
     private MainPresenter presenter;
     private MovieGridAdapter adapter;
@@ -91,7 +95,8 @@ public class MainActivity extends BaseActivity implements MainMVPView, MainMVPNa
             setUnBinder(ButterKnife.bind(this));
 
             presenter.onAttach(this); //REMARK How to check that call?
-
+            refresh.setOnClickListener(view -> presenter.fetchMovieList(tempCat));
+            refresh.setText(getString(R.string.refresh));
             GridLayoutManager layoutManager = new GridLayoutManager(this, calculateNoOfColumns(this));
             movieGrid.setLayoutManager(layoutManager);
             movieGrid.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -117,13 +122,9 @@ public class MainActivity extends BaseActivity implements MainMVPView, MainMVPNa
             movieGrid.setAdapter(adapter);
             setTitle(categories[presenter.getCategorie()]);
 
-            if (movieList != null)
-
-            {
+            if (movieList != null){
                 populateList(movieList);
-            } else
-
-            {
+            } else {
                 showLoading();
                 presenter.fetchMovieList(-1);
             }
@@ -247,6 +248,18 @@ public class MainActivity extends BaseActivity implements MainMVPView, MainMVPNa
                 break;
             default:
         }
+    }
+
+    @Override
+    public void showRefreshButton() {
+        refresh.setVisibility(View.VISIBLE);
+        presenter.setRefreshVisible(true);
+    }
+
+    @Override
+    public void hideRefreshButton() {
+        refresh.setVisibility(View.GONE);
+        presenter.setRefreshVisible(false);
     }
 }
 

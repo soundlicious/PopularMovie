@@ -57,7 +57,6 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailMVPV
         setContentView(R.layout.activity_moviedetail);
         setUnBinder(ButterKnife.bind(this));
         String apiKey = BuildConfig.THEMOVIEDB_API;
-        String language = Locale.getDefault().toString().replace("_", "-");
         String[] tabs = getResources().getStringArray(R.array.movie_filter_tab);
         Intent intent = getIntent();
         ActionBar actionBar = getSupportActionBar();
@@ -84,7 +83,7 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailMVPV
 
     @Override
     public boolean onSupportNavigateUp() {
-        onBackPressed();
+//        onBackPressed();
         return true;
     }
 
@@ -124,7 +123,8 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailMVPV
             case R.id.menu_bookmark:
                 setStarIcon(presenter.bookmarkMovie());
                 return true;
-            case R.id.home :
+            case android.R.id.home :
+                Log.i(TAG, "home");
                 presenter.updateBookmark(movie);
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
@@ -183,6 +183,16 @@ public class MovieDetailActivity extends BaseActivity implements MovieDetailMVPV
         intent.putExtra(MOVIE_ID, movie);
         intent.setFlags(0);
         setResult(RESULT_OK, intent);
+    }
+
+    @Override
+    public void showRefreshButton() {
+
+    }
+
+    @Override
+    public void hideRefreshButton() {
+
     }
 }
 

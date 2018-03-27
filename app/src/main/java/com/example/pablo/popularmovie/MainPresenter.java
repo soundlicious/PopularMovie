@@ -46,6 +46,8 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
 
     @Override
     public void fetchPopularMovie() {
+        if (isRefreshVisible())
+            getMvpView().showRefreshButton();
         if (currentPage <= maxPage) {
             isLoading = true;
             apiHelper.getPopularMovieList(apiKey, currentPage, language)
@@ -56,14 +58,18 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
                         getMvpView().hideLoading();
                         if (currentPage == 1)
                             maxPage = page.getTotalPages();
+                        if (isRefreshVisible())
+                            getMvpView().hideRefreshButton();
                         currentPage++;
                         isLoading = false;
-                    }, throwable -> System.out.println(throwable.getMessage()));
+                    }, throwable -> isLoading = false);
         }
     }
 
     @Override
     public void fetchTopRatedMovie() {
+        if (isRefreshVisible())
+            getMvpView().showRefreshButton();
         if (currentPage <= maxPage) {
 
             isLoading = true;
@@ -74,16 +80,22 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
                         movies = new ArrayList<>(page.getMovieDetails());
                         getMvpView().populateList(movies);
                         getMvpView().hideLoading();
+                        if (isRefreshVisible())
+                            getMvpView().hideRefreshButton();
                         if (currentPage == 1)
                             maxPage = page.getTotalPages();
                         currentPage++;
                         isLoading = false;
-                    }, throwable -> System.out.println(throwable.getMessage()));
+                    }, throwable -> isLoading = false);
         }
     }
 
     @Override
     public void getBookmarkedMovie() {
+        if (isRefreshVisible()) {
+            getMvpView().hideRefreshButton();
+            setRefreshVisible(true);
+        }
         getMvpView().populateList(cpManager.queryMovies());
         getMvpView().hideLoading();
     }
@@ -103,6 +115,8 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
                         }
                     }
                 }
+                if (isRefreshVisible())
+                    getMvpView().hideRefreshButton();
                 getMvpView().flushList();
                 getMvpView().populateList(list);
             }
@@ -116,7 +130,8 @@ public class MainPresenter<E extends MainMVPView> extends BasePresenter<E> imple
         isLoading = false;
         language = "en-US";
         getMvpView().flushList();
-        getMvpView().showLoading();
+        if (!isRefreshVisible())
+            getMvpView().showLoading();
     }
 
 

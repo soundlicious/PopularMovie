@@ -2,36 +2,40 @@ package com.example.pablo.popularmovie.bases;
 
 import com.example.pablo.popularmovie.data.DataManager;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by pablo on 02/03/2018.
  */
 
 public class BasePresenter<E extends IMVPView> implements IMVPPresenter<E> {
 
-    private E mMvpView;
+    private WeakReference<E> mMvpViewRef;
+    private boolean isRefreshVisible;
 
     protected E getMvpView() {
-        return mMvpView;
+        return mMvpViewRef.get();
     }
 
     public BasePresenter(String apiKey) throws NullAPIException {
         if (apiKey == null)
             throw new NullAPIException("Null key Parameter");
+        isRefreshVisible = false;
     }
 
     @Override
     public void onAttach(E mvpView) {
-            mMvpView = mvpView;
+            mMvpViewRef = new WeakReference<>(mvpView);
     }
 
     @Override
     public void onDetach() {
-        mMvpView = null;
+        mMvpViewRef = null;
     }
 
     @Override
     public boolean isViewAttached(){
-        return mMvpView != null;
+        return mMvpViewRef != null;
     }
 
     public void checkViewAttached() {
@@ -43,6 +47,13 @@ public class BasePresenter<E extends IMVPView> implements IMVPPresenter<E> {
         return DataManager.getInstance();
     }
 
+    public boolean isRefreshVisible(){
+        return isRefreshVisible;
+    }
+
+    public void setRefreshVisible(boolean isRefreshVisible){
+        this.isRefreshVisible = isRefreshVisible;
+    }
 
     public static class NullAPIException extends Exception {
 

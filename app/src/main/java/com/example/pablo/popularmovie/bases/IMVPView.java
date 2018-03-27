@@ -20,4 +20,8 @@ public interface IMVPView {
     void showMessage(String message);
 
     boolean isNetworkOn();
+
+    void showRefreshButton();
+
+    void hideRefreshButton();
 }
